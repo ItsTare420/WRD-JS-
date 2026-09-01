@@ -9,7 +9,7 @@ let k1_preuzmi = () => {
     .then((res) => res.json())
     .then((body) => {
       globalPodaci = body.podaci;
-      prikaziPonude(globalPodaci); // Izdvojeno u posebnu funkciju da se ne duplira kod u pretrazi
+      prikaziPonude(globalPodaci); 
     });
 };
 k1_preuzmi();
@@ -18,7 +18,6 @@ let prikaziPonude = (podaci) => {
   let destinacijeDiv = document.getElementById("destinacije");
   destinacijeDiv.innerHTML = "";
   for (let i = 0; i < podaci.length; i++) {
-    // Da bismo sačuvali pravi index za k2_odaberiDestinaciju, proslijedit ćemo tačan id/objekat
     let praviIndex = globalPodaci.indexOf(podaci[i]); 
     destinacijeDiv.innerHTML += `
       <div class="best-offer-wrapper">
@@ -69,7 +68,6 @@ let k2_odaberiDestinaciju = (rb) => {
     let brojMjesta = nizPutovanja[i].countSlobodnoMjesta;
     let stilZaRed = brojMjesta < 3 ? "background-color:#fe7d7d46;" : "";
     
-    // Dodali smo id putovanja kao parametar u funkciju K3
     document.getElementById("putovanjaTabela").innerHTML += `
       <tr class="putovanje-red" id="putovanje-red-${i}" draggable="true" data-idputovanja="${nizPutovanja[i].idPutovanje}" data-drzava="${globalPodaci[rb].drzava}" style="${stilZaRed}">
         <td>${nizPutovanja[i].idPutovanje}</td>
@@ -84,7 +82,7 @@ let k2_odaberiDestinaciju = (rb) => {
 };
 
 let k3_odaberiPutovanje = (id, drzava, datum, cijena) => {
-  odabranoPutovanjeId = id; // Cuvanje ID-a za k5_posalji
+  odabranoPutovanjeId = id;
   document.getElementById("destinacijaInput").value = drzava;
   document.getElementById("datumPolaskaInput").value = datum;
   document.getElementById("cijenaPoGostuInput").value = cijena;
@@ -96,20 +94,20 @@ let k4_promjenaBrojaGostiju = () => {
   let gostiDiv = document.querySelector(".gostiDiv");
   gostiDiv.innerHTML = "";
 
-  if (greska !== "") return; // Prekida ako broj gostiju nije validan
+  if (greska !== "") return; 
 
   let brojGostiju = parseInt(document.getElementById("brojGostijuInput").value) || 0;
   let cijena = parseFloat(document.getElementById("cijenaPoGostuInput").value) || 0;
   let tipGosta = document.getElementById("tipGostaSelect").value;
   
-  // Izračun cijene
+
   let ukupnaCijena = brojGostiju * cijena;
   if (tipGosta === "Djeca") {
-    ukupnaCijena = ukupnaCijena - (ukupnaCijena * 0.30); // 30% popusta za djecu
+    ukupnaCijena = ukupnaCijena - (ukupnaCijena * 0.30);
   }
   document.getElementById("ukupnaCijena").value = ukupnaCijena;
 
-  // Generisanje inputa
+
   for (let i = 0; i < brojGostiju; i++) {
     gostiDiv.innerHTML += `
       <input type="text" class="ime-gosta" placeholder="Ime gosta ${i + 1}" style="margin-bottom: 5px; display: block; width: 100%;">
@@ -132,7 +130,6 @@ let provjeriBrojGostiju = () => {
 let provjeriBrojPasosa = () => { 
   let pasos = document.getElementById("brojPasosaInput").value;
   let el = document.getElementById("brojPasosaInput");
-  // Regex prema uputama iz slike D
   let regex = /^[A-Z][0-3]-?[a-g]{3}[0-9]{2}-[A-F]{2}$/; 
   if(!regex.test(pasos)) {
     el.style.backgroundColor = ErrorBackgroundColor;
@@ -183,12 +180,11 @@ let k5_posalji = () => {
     return;
   }
 
-  // Prikupljanje imena gostiju
+
   let imena = [];
   let poljaGosti = document.querySelectorAll(".ime-gosta");
   poljaGosti.forEach(polje => imena.push(polje.value));
 
-  // Kreiranje Payload-a prema Swagger dokumentaciji
   let obj = {
     putovanjeBroj: odabranoPutovanjeId.toString(),
     destinacijaDrzava: document.getElementById("destinacijaInput").value,
@@ -229,13 +225,12 @@ document.addEventListener("drop", (e) => {
   if (row) {
     let cells = row.getElementsByTagName("td");
     
-    // Čuvanje podataka prepoznatih iz reda nakon drag and dropa
     odabranoPutovanjeId = row.getAttribute("data-idputovanja");
     document.getElementById("destinacijaInput").value = row.getAttribute("data-drzava");
     document.getElementById("datumPolaskaInput").value = cells[1].innerText;
     document.getElementById("cijenaPoGostuInput").value = cells[4].innerText;
     
-    k4_promjenaBrojaGostiju(); // Obavezno okinuti preračunavanje
+    k4_promjenaBrojaGostiju(); 
 
     bounceInput("datumPolaskaInput");
     bounceInput("cijenaPoGostuInput");
