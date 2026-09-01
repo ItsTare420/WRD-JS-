@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="styles/style.css" rel="stylesheet" />
+    <link href="styles/footer.css" rel="stylesheet" />
+    <link href="styles/form.css" rel="stylesheet" />
+    <link href="styles/table.css" rel="stylesheet" />
+    <link href="dialog/fit-dialog.css" rel="stylesheet" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div
+      style="
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 0.7rem;
+        border: 1px solid black;
+        max-width: 600px;
+      "
+    >
+      <!-- Upisati broj indeksa -->
+      <h2>Broj indeksa: IB000000</h2>
+      <label style="color: red"
+        >Obavezno popuniti podatke u html fajlu prije uploada!</label
+      >
+
+      <div style="display: flex; gap: 50px; border: 1px solid silver">
+        <!-- Lijeva kolona -->
+        <div style="flex: 1">
+          <h3>Prvi dio ispita</h3>
+          <p>Pregledati CSS - desktop css – <strong> ?? </strong></p>
+          <p>Pregledati CSS - mobile css – <strong> ?? </strong></p>
+          <p>Pregledati JS - označi državu – <strong> ?? </strong></p>
+        </div>
+
+        <!-- Desna kolona -->
+        <div style="flex: 1">
+          <h3>Drugi dio ispita</h3>
+          <p>Pregledati JS - A pretraga države – <strong> ?? </strong></p>
+          <p>Pregledati JS - B odabir putovanja – <strong> ?? </strong></p>
+          <p>Pregledati JS - C promjena gostiju – <strong> ?? </strong></p>
+          <p>Pregledati JS - D validacija – <strong> ?? </strong></p>
+          <p>Pregledati JS - E post na server – <strong> ?? </strong></p>
+          <p>Pregledati JS - F drag and drop – <strong> ?? </strong></p>
+          <p>Pregledati JS - G animacija – <strong> ?? </strong></p>
+        </div>
+      </div>
+      <label>Ovdje napisati napomenu za pregled (ako treba)</label>
+    </div>
+    <hr />
+    <div class="nav-bar">
+      <img src="images/logo.png" />
+      <ul>
+        <li>Home</li>
+        <li>Photos & Videos</li>
+        <li>Categories</li>
+        <li>Users</li>
+      </ul>
+      <div class="sign-in-button">Sign In/Up</div>
+    </div>
+    <div class="header">
+      <div class="central-text">
+        <div class="heading-text">
+          <h2>
+            Enter a world of <span>Travel</span> & Amazing <span>Awards</span>
+          </h2>
+          <hr />
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam eos
+            soluta repudiandae molestiae laudantium sint harum mag.Aliquam eos
+            soluta repudiandae molestiae laudantium sint harum mag
+          </p>
+        </div>
+        <div class="heading-buttons">
+          <div class="explore-button">Explore SnapX Contest</div>
+          <div class="video-button">Watch our video now</div>
+        </div>
+        <div class="header-images">
+          <img src="images/closed-01.jpg" alt="" />
+          <img id="image-2" src="images/closed-02.jpg" alt="" />
+          <img id="image-3" src="images/closed-03.jpg" alt="" />
+        </div>
+      </div>
+    </div>
+    <div class="middle-section">
+      <h4>Check Out <span>Popular</span> Destinations</h4>
+      <div class="search-bar">
+        <input
+          id="pretraga-pojam"
+          placeholder="Search for travels"
+          oninput="pretraga()"
+        />
+        <div class="search-button">Search travels</div>
+      </div>
+    </div>
+    <div class="best-offers-container" id="destinacije"></div>
+
+    <div style="overflow-x: auto; clear: left">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Putovanje ID</th>
+            <th>Polazak</th>
+            <th>Povratak</th>
+            <th>Slobodnih mjesta</th>
+            <th>Cijena</th>
+            <th>Odaberi</th>
+          </tr>
+        </thead>
+        <tbody id="putovanjaTabela"></tbody>
+      </table>
+    </div>
+    <div
+      id="contact-form"
+      ondrop="dropHandler(event)"
+      ondragover="dragoverHandler(event)"
+    >
+      <div class="container">
+        <div class="item">
+          <label for="destinacija">Destinacija</label>
+          <input type="text" id="destinacija" disabled />
+        </div>
+        <div class="item">
+          <label for="soba">Datum polaska</label>
+          <input type="text" id="datumPolaska" disabled />
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="container">
+        <div class="item">
+          <label class="bold" for="brojGostiju">Broj gostiju</label>
+          <input
+            type="number"
+            id="brojGostiju"
+            value="1"
+            min="1"
+            oninput="k4_promjenaBrojaGostiju()"
+          />
+        </div>
+        <div class="item">
+          <label for="cijenaPoGostu">Cijena po gostu</label>
+          <input type="text" id="cijenaPoGostu" disabled />
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="item"></div>
+        <div class="item">
+          <label class="bold" for="ukupnaCijena">Sumarno za sve goste</label>
+          <input type="text" id="ukupnaCijena" disabled />
+        </div>
+      </div>
+      <br />
+      <hr />
+      <br />
+      <div id="gosti"></div>
+      <br />
+      <br />
+      <hr />
+      <br />
+      <br />
+      <div class="container3">
+        <div class="item-container">
+          <div class="item">
+            <label for="brojPasosa">Broj pasoša</label>
+            <input
+              id="brojPasosa"
+              oninput="provjeriPasos()"
+              value="B2-cfa79-BC"
+            />
+          </div>
+          <div class="item">
+            <label for="datumVazenjaPasosa"
+              >Datum važenja pasoša (ne treba validirati)</label
+            >
+            <input id="datumVazenjaPasosa" value="01-10-2030" disabled />
+          </div>
+        </div>
+        <div class="item-container">
+          <div class="item">
+            <label for="email">E-mail</label>
+            <input
+              id="email"
+              oninput="provjeriEmail()"
+              value="ime.prezime@edu.fit.ba"
+            />
+          </div>
+          <div class="item">
+            <label for="phone">Broj telefona (ne treba validirati)</label>
+            <input
+              id="phone"
+              value="061-000-222"
+              oninput="provjeriBrojTelefona()"
+            />
+          </div>
+        </div>
+      </div>
+      <button class="button" onclick="k5_posalji()">Send</button>
+    </div>
+
+    <footer>
+      <p>Copyright © 2017 SunTravel. All Rights Reserved.</p>
+      <ul class="footer-links">
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+        <li><a href="#">Contact Support</a></li>
+      </ul>
+    </footer>
+    <script src="dialog/fit-dialog.js"></script>
+    <script src="toastr/fit-toastr.js"></script>
+    <script src="scripts/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+body {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+.header {
+  background-image: url("../images/banner-bg.jpg");
+  height: 1000px;
+  background-size: cover;
+}
+
+.best-offer-wrapper {
+  width: 25%;
+  margin-bottom: 50px;
+  border: 1px solid silver;
+  text-align: center;
+}
+
+.offer-button {
+  color: rgb(66, 190, 255);
+  border: 1px solid rgb(66, 190, 255);
+  width: 390px;
+  margin: auto;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.search-button {
+  background-color: rgb(66, 190, 255);
+  color: white;
+  width: 200px;
+  padding: 15px;
+  cursor: pointer;
+}
+
+.offer-content{
+  height: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+ 
+}
