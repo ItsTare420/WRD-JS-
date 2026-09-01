@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="styles/footer.css" rel="stylesheet" />
+  <link href="styles/form.css" rel="stylesheet" />
+  <link href="styles/table.css" rel="stylesheet" />
+  <link href="styles/style.css" rel="stylesheet" />
+  <link href="dialog/fit-dialog.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div style="
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 0.7rem;
+        border: 1px solid black;
+        max-width: 600px;
+      ">
+    <!-- Upisati broj indeksa -->
+    <h2>Broj indeksa: IB000000</h2>
+    <label style="color: red">Obavezno popuniti podatke u html fajlu prije uploada!</label>
+
+    <div style="display: flex; gap: 50px; border: 1px solid silver">
+      <!-- Lijeva kolona -->
+      <div style="flex: 1">
+        <h3>Prvi dio ispita</h3>
+        <p>Pregledati CSS - desktop css – <strong> ?? </strong></p>
+        <p>Pregledati CSS - mobile css – <strong> ?? </strong></p>
+        <p>Pregledati JS - označi državu i hover – <strong> ?? </strong></p>
+      </div>
+
+      <!-- Desna kolona -->
+      <div style="flex: 1">
+        <h3>Drugi dio ispita</h3>
+        <p>Pregledati JS - A pretraga po gradu – <strong> ?? </strong></p>
+        <p>
+          Pregledati JS - B odabir putovanja i označavanje kritičnih putovanja
+          – <strong> ?? </strong>
+        </p>
+        <p>
+          Pregledati JS - C promjena gostiju i cijene sa tipovima gostiju–
+          <strong> ?? </strong>
+        </p>
+        <p>Pregledati JS - D validacija – <strong> ?? </strong></p>
+        <p>Pregledati JS - E post na server – <strong> ?? </strong></p>
+        <p>Pregledati JS - F drag and drop – <strong> ?? </strong></p>
+        <p>Pregledati JS - G animacija – <strong> ?? </strong></p>
+      </div>
+    </div>
+    <label>Ovdje napisati napomenu za pregled (ako treba)</label>
+  </div>
+  <hr />
+  <div class="colors"></div>
+  <div class="header">
+    <div class="logo">
+      <p><b>Travel</b> agency</p>
+    </div>
+    <div class="contact">
+      <div class="phone-number">
+        <img src="images/phone1.png" />
+        1 800 123 456
+      </div>
+      <div>
+        <img src="images/social_ic1.png" />
+        <img src="images/social_ic2.png" />
+        <img src="images/social_ic3.png" />
+      </div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="nav-bar">
+      <ul>
+        <li>Home Page</li>
+        <li>About Us</li>
+        <li>Students</li>
+        <li>Departments</li>
+        <li>Gallery</li>
+        <li>Contact Us</li>
+      </ul>
+    </div>
+    <div class="wrapper">
+      <div class="image-header">
+        <img src="images/travel.webp" />
+        <div class="image-header-text">
+          <div class="text-container">
+            <p>Best travel</p>
+            <div>
+              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Porro
+              accusantium expedita dignissimos! A accusamus possimus, deserunt
+              assumenda nesciunt suscipit exercitationem fuga ab eum et,
+              provident, sequi sint sapiente. Ad, porro.
+            </div>
+            <div class="text-container-buttons">
+              <div id="button-contact">Contact</div>
+              <div id="button-about">About Us</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="best-offers-section">
+        <div class="section-header">
+          <div class="section-break">
+            <div>-----</div>
+            <div id="middle"></div>
+            <div>-----</div>
+          </div>
+          <h1>Best offers</h1>
+          <p>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            Architecto accusantium ad, est hic odio praesentium molestiae
+            dolore ab dolorum perferendis eius a, sapiente officia aperiam
+            minus pariatur. Repellendus, porro? Voluptates!
+          </p>
+
+          <div class="search-bar">
+            <input placeholder="Unesite naziv grada..." id="searchbar-id" oninput="searchFunkcija()"/>
+            <button class="search-button"id="searchbar-button">Search</button>
+          </div>
+          <label>Milano, Venecija, Rim, Tokio, Toronto, Moskva, Sydney</label>
+        </div>
+
+        <div class="best-offers-container" id="destinacije"></div>
+      </div>
+      <div style="overflow-x: auto; clear: left">
+        <table class="styled-table">
+          <thead>
+            <tr>
+              <th>Putovanje ID</th>
+              <th>Polazak</th>
+              <th>Povratak</th>
+              <th>Slobodnih mjesta</th>
+              <th>Cijena</th>
+              <th>Odaberi</th>
+            </tr>
+          </thead>
+          <tbody id="putovanjaTabela"></tbody>
+        </table>
+      </div>
+      <div id="contact-form" ondrop="dropHandler(event)" ondragover="dragoverHandler(event)">
+        <div class="container">
+          <div class="item">
+            <label for="destinacijaInput">Destinacija</label>
+            <input type="text" id="destinacijaInput" disabled />
+          </div>
+          <div class="item">
+            <label for="datumPolaskaInput">Datum polaska</label>
+            <input type="text" id="datumPolaskaInput" disabled />
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="container">
+          <div class="item">
+            <label class="bold" for="brojGostijuInput">Broj gostiju</label>
+            <input type="number" id="brojGostijuInput" value="1" min="1" oninput="k4_promjenaBrojaGostiju()" />
+          </div>
+          <div class="item">
+            <label for="cijenaPoGostuInput">Cijena po gostu</label>
+            <input type="text" id="cijenaPoGostuInput" disabled />
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="item">
+            <label for="tipGostaSelect" onchange="k4_promjenaBrojaGostiju()">Tip gosta</label>
+            <select id="tipGostaSelect">
+              <option>Odrasli</option>
+              <option>Djeca</option>
+            </select>
+          </div>
+          <div class="item">
+            <label class="bold" for="ukupnaCijena">Sumarno za sve goste</label>
+            <input type="text" id="ukupnaCijena" disabled />
+          </div>
+        </div>
+        <br />
+        <hr />
+        <br />
+        <div class="gostiDiv"></div>
+        <br />
+        <br />
+        <hr />
+        <br />
+        <br />
+        <div class="container3">
+          <div class="item-container">
+            <div class="item">
+              <label for="brojPasosaInput">Broj pasoša</label>
+              <input id="brojPasosaInput" oninput="provjeriBrojPasosa()" value="B2-cfa79-BC" />
+            </div>
+            <div class="item">
+              <label for="datumVazenjaPasosa">Datum važenja pasoša (ne treba validirati)</label>
+              <input id="datumVazenjaPasosa" value="01-10-2030" disabled />
+            </div>
+          </div>
+          <div class="item-container">
+            <div class="item">
+              <label for="emailInput">E-mail</label>
+              <input id="emailInput" oninput="provjeriEmail()" value="ime.prezime@edu.fit.ba" />
+            </div>
+            <div class="item">
+              <label for="phoneInput">Broj telefona (ne treba validirati)</label>
+              <input id="phoneInput" value="061-000-222" oninput="provjeriBrojTelefona()" />
+            </div>
+          </div>
+        </div>
+        <button class="button" onclick="k5_posalji()">Send</button>
+      </div>
+
+      <footer>
+        <p>Copyright © 2017 SunTravel. All Rights Reserved.</p>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Contact Support</a></li>
+        </ul>
+      </footer>
+    </div>
+  </div>
+  <script src="scripts/script.js"></script>
+  <script src="dialog/fit-dialog.js"></script>
+  <script src="toastr/fit-toastr.js"></script>
+</body>
+
+</html>
