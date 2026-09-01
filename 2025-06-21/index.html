@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link href="style.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="dialog/fit-dialog.css" />
+  </head>
+
+  <body>
+    <div
+      style="
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 5px;
+        font-size: 0.7rem;
+        border: 1px solid black;
+        max-width: 600px;
+      "
+    >
+      <!-- Upisati broj indeksa -->
+      <h2>Broj indeksa: IB000000</h2>
+      <label style="color: red"
+        >Obavezno popuniti podatke u html fajlu prije uploada!</label
+      >
+
+      <div style="display: flex; gap: 50px; border: 1px solid silver">
+        <!-- Lijeva kolona -->
+        <div style="flex: 1">
+          <h3>Prvi dio ispita</h3>
+          <p>Pregledati CSS - desktop css – <strong>DA / NE</strong></p>
+          <p>Pregledati CSS - mobile css – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - označi državu – <strong>DA / NE</strong></p>
+        </div>
+
+        <!-- Desna kolona -->
+        <div style="flex: 1">
+          <h3>Drugi dio ispita</h3>
+          <p>Pregledati JS - A pretraga države – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - B odabir putovanja – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - C promjena gostiju – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - D validacija – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - E post na server – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - F drag and drop – <strong>DA / NE</strong></p>
+          <p>Pregledati JS - G animacija – <strong>DA / NE</strong></p>
+        </div>
+      </div>
+    </div>
+    <div class="colors"></div>
+    <div class="header">
+      <div class="logo">
+        <p
+          style="
+            color: gray;
+            font-size: 32px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+          "
+        >
+          <b>Travel</b> agency
+        </p>
+      </div>
+      <div class="contact">
+        <div class="phone-number">
+          <img src="images/phone1.png" />
+          <p style="color: gray; font-size: 18px">1 800 123 456</p>
+        </div>
+        <div>
+          <img src="images/social_ic1.png" />
+          <img src="images/social_ic2.png" />
+          <img src="images/social_ic3.png" />
+        </div>
+      </div>
+    </div>
+    <div class="main">
+      <div class="nav-bar">
+        <ul>
+          <li>Home Page</li>
+          <li>About Us</li>
+          <li>Students</li>
+          <li>Departments</li>
+          <li>Gallery</li>
+          <li>Contact Us</li>
+        </ul>
+      </div>
+      <div class="wrapper">
+        <div class="image-header">
+          <img src="images/travel.webp" />
+          <div class="image-header-text">
+            <div class="text-container">
+              <p
+                style="
+                  color: white;
+                  font-size: 36px;
+                  font-family: Georgia, 'Times New Roman', Times, serif;
+                "
+              >
+                Best travel
+              </p>
+              <div
+                style="
+                  color: white;
+                  font-family: 'Times New Roman', Times, serif;
+                "
+              >
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Porro
+                accusantium expedita dignissimos! A accusamus possimus, deserunt
+                assumenda nesciunt suscipit exercitationem fuga ab eum et,
+                provident, sequi sint sapiente. Ad, porro.
+              </div>
+              <div class="text-container-buttons">
+                <div id="button-contact" class="text-button">Contact</div>
+                <div id="button-about" class="text-button">About Us</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="best-offers-section">
+          <div class="section-header">
+            <div class="section-break">
+              <div class="lines">-----</div>
+              <div class="middle"></div>
+              <div class="lines">-----</div>
+            </div>
+            <div class="section-header-text">
+              <h1
+                style="
+                  color: gray;
+                  font-family: Georgia, 'Times New Roman', Times, serif;
+                  font-size: 40px;
+                "
+              >
+                Best offers
+              </h1>
+              <p style="color: gray; text-align: center">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                Architecto accusantium ad, est hic odio praesentium molestiae
+                dolore ab dolorum perferendis eius a, sapiente officia aperiam
+                minus pariatur. Repellendus, porro? Voluptates!
+              </p>
+
+              <div class="search-bar">
+                <input placeholder="Type something..." />
+                <div class="search-button">Search</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="best-offers-container" id="destinacije"></div>
+        </div>
+        <div style="overflow-x: auto; clear: left">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Putovanje ID</th>
+                <th>Polazak</th>
+                <th>Povratak</th>
+                <th>Slobodnih mjesta</th>
+                <th>Cijena</th>
+                <th>Odaberi</th>
+              </tr>
+            </thead>
+            <tbody id="putovanjaTabela"></tbody>
+          </table>
+        </div>
+        <div
+          id="contact-form"
+          ondrop="dropHandler(event)"
+          ondragover="dragoverHandler(event)"
+        >
+          <div class="container">
+            <div class="item">
+              <label for="destinacija">Destinacija</label>
+              <input type="text" id="destinacija" disabled />
+            </div>
+            <div class="item">
+              <label for="soba">Datum polaska</label>
+              <input type="text" id="datumPolaska" disabled />
+            </div>
+          </div>
+
+          <hr />
+
+          <div class="container">
+            <div class="item">
+              <label class="bold" for="brojGostiju">K4 - Broj gostiju</label>
+              <input
+                type="number"
+                id="brojGostiju"
+                value="1"
+                min="1"
+                max="5"
+                oninput="k4_promjenaBrojaGostiju()"
+              />
+            </div>
+            <div class="item">
+              <label for="cijenaPoGostu">Cijena po gostu</label>
+              <input type="text" id="cijenaPoGostu" disabled />
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="item"></div>
+            <div class="item">
+              <label class="bold" for="ukupnaCijena"
+                >Sumarno za sve goste</label
+              >
+              <input type="text" id="ukupnaCijena" disabled />
+            </div>
+          </div>
+          <br />
+          <hr />
+          <br />
+          <div id="gosti"></div>
+          <br />
+          <br />
+          <hr />
+          <br />
+          <br />
+          <div class="container3">
+            <div class="item-container">
+              <div class="item">
+                <label for="brojPasosa">Broj pasoša</label>
+                <input
+                  id="brojPasosa"
+                  oninput="provjeriPasos()"
+                  value="IB123456"
+                />
+              </div>
+              <div class="item">
+                <label for="datumVazenjaPasosa">Datum važenja pasoša</label>
+                <input id="datumVazenjaPasosa" />
+              </div>
+            </div>
+            <div class="item-container">
+              <div class="item">
+                <label for="email">E-mail</label>
+                <input id="email" oninput="provjeriEmail()" />
+              </div>
+              <div class="item">
+                <label for="phone">Broj telefona</label>
+                <input id="phone" />
+              </div>
+            </div>
+          </div>
+          <button class="button" onclick="k5_posalji()">K5 Send</button>
+        </div>
+
+        <footer>
+          <p>Copyright © 2025 SunTravel. All Rights Reserved.</p>
+          <ul class="footer-links">
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+            <li><a href="#">Contact Support</a></li>
+          </ul>
+        </footer>
+      </div>
+    </div>
+    <script src="dialog/fit-dialog.js"></script>
+    <script src="toastr/fit-toastr.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
