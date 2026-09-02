@@ -220,9 +220,7 @@ function prikaziDestinacije(podaci) {
   destinacije.innerHTML = htmlIspis;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Z1 — filtriranje ponuda                                                    */
-/* -------------------------------------------------------------------------- */
+
 
 function primijeniFiltere() {
   let trazeniPojam = document.getElementById("pretraga-pojam").value.toLowerCase();
@@ -231,8 +229,7 @@ function primijeniFiltere() {
   let filtriraniPodaci = globalPodaci.filter(ponuda => {
     let sumNocenja = 0;
     let matchTekst = false;
-    
-    // Sabiranje noćenja i provjera naziva gradova
+
     for (let i = 0; i < ponuda.boravakGradovi.length; i++) {
       sumNocenja += ponuda.boravakGradovi[i].brojNocenja;
       if (ponuda.boravakGradovi[i].nazivGrada.toLowerCase().includes(trazeniPojam)) {
@@ -240,11 +237,9 @@ function primijeniFiltere() {
       }
     }
 
-    // Provjera države i opisa
     if (ponuda.drzava.toLowerCase().includes(trazeniPojam)) matchTekst = true;
     if (ponuda.opisPonude.toLowerCase().includes(trazeniPojam)) matchTekst = true;
-    
-    // Ako je pretraga prazna, preskačemo tekstualni filter
+
     if (trazeniPojam === "") matchTekst = true;
 
     return matchTekst && sumNocenja >= minNocenja;
@@ -259,9 +254,6 @@ function azurirajBrojRezultata(broj) {
   document.getElementById("rezultatiBroj").innerHTML = text;
 }
 
-/* -------------------------------------------------------------------------- */
-/* Z2 — Prikaz tabele termina, računanje trajanja (Z2) i odabir               */
-/* -------------------------------------------------------------------------- */
 
 function k2_odaberiDestinaciju(indexPonude) {
   let ponuda = globalPodaci[indexPonude];
@@ -274,17 +266,14 @@ function k2_odaberiDestinaciju(indexPonude) {
 
   odabranoPutovanje = null;
 
-  // Ukloni staru selekciju na karticama
   let kartice = document.querySelectorAll(".destination-card");
   for (let i = 0; i < kartice.length; i++) {
     kartice[i].classList.remove("selected-card");
   }
   
-  // Oznaci kliknutu karticu
   let odabranaKartica = document.querySelector(`[data-destination-index="${indexPonude}"]`);
   if (odabranaKartica) odabranaKartica.classList.add("selected-card");
 
-  // Reset inputa na desnoj strani
   document.getElementById("brojOdraslih").value = "";
   document.getElementById("brojDjece").value = "0";
   document.getElementById("ukupnoPutnika").value = "";
@@ -306,7 +295,6 @@ function k2_odaberiDestinaciju(indexPonude) {
     let slobodnaMjesta = Number(putovanje.countSlobodnoMjesta);
     let popunjeno = slobodnaMjesta <= 0;
 
-    // Izračun trajanja putovanja (Z2)
     let trajanje = "—";
     if (putovanje.datumPol && putovanje.datumPov) {
       let pPol = putovanje.datumPol.split('.');
@@ -348,22 +336,16 @@ function k2_odaberiDestinaciju(indexPonude) {
 function k3_odaberiPutovanje(indexPonude, indexPutovanja) {
   odabranoPutovanje = globalPodaci[indexPonude].planiranaPutovanja[indexPutovanja];
 
-  // Sklanjanje markera sa svih redova
   let sviRedovi = document.querySelectorAll("#putovanjaTabela tr");
   for (let i = 0; i < sviRedovi.length; i++) {
     sviRedovi[i].style.backgroundColor = "";
   }
 
-  // Postavljanje markera na odabrani
   document.getElementById("putovanje-red-" + indexPutovanja).style.backgroundColor = OkBackgroundColor;
 
-  // Osvežavanje unosa putnika za novu cijenu
   k4_promjenaPutnika();
 }
 
-/* -------------------------------------------------------------------------- */
-/* Z3 — Odrasli, djeca, dinamička polja i cijena                              */
-/* -------------------------------------------------------------------------- */
 
 function provjeriBrojPutnika() {
   if (!odabranoPutovanje) return "Odaberi termin iz tabele.<br>";
@@ -397,21 +379,18 @@ function k4_promjenaPutnika() {
   
   document.getElementById("ukupnoPutnika").value = brojOdraslih + brojDjece;
 
-  // Cijena: odrasli 100%, djeca 70%
   let cijenaPoOsobi = Number(odabranoPutovanje.cijenaPoOsobiEur);
   let ukupnaCijena = (brojOdraslih * cijenaPoOsobi) + (brojDjece * cijenaPoOsobi * 0.7);
   document.getElementById("ukupnaCijena").value = ukupnaCijena.toFixed(2) + " €";
 
-  // Spasavanje starih vrijednosti iz inputa
   let stareVrijednosti = {};
   let trenutniInputi = document.querySelectorAll(".ime-putnika");
   for (let i = 0; i < trenutniInputi.length; i++) {
     stareVrijednosti[trenutniInputi[i].id] = trenutniInputi[i].value;
   }
 
-  gostiDiv.innerHTML = ""; // Brisanje i ponovno iscrtavanje
+  gostiDiv.innerHTML = "";
 
-  // Iscrtavanje odraslih
   for (let i = 1; i <= brojOdraslih; i++) {
     let id = "odrasli-" + i;
     let vrijednost = stareVrijednosti[id] || "";
@@ -426,7 +405,6 @@ function k4_promjenaPutnika() {
     `;
   }
 
-  // Iscrtavanje djece
   for (let i = 1; i <= brojDjece; i++) {
     let id = "dijete-" + i;
     let vrijednost = stareVrijednosti[id] || "";
@@ -441,10 +419,6 @@ function k4_promjenaPutnika() {
     `;
   }
 }
-
-/* -------------------------------------------------------------------------- */
-/* Z4 — Frontend validacija                                                   */
-/* -------------------------------------------------------------------------- */
 
 function provjeriPasos() {
   let pasosInput = document.getElementById("brojPasosa");
@@ -472,9 +446,7 @@ function provjeriEmail() {
   }
 }
 
-/* -------------------------------------------------------------------------- */
-/* Z5 — Kreiranje objekta i slanje rezervacije                                */
-/* -------------------------------------------------------------------------- */
+
 
 function kreirajObjekatRezervacije() {
   let imenaGostijuNiz = [];
@@ -537,5 +509,5 @@ function k5_posalji() {
     });
 }
 
-// Pokretanje učitavanja pri pokretanju stranice
+
 document.addEventListener("DOMContentLoaded", k1_preuzmi);
