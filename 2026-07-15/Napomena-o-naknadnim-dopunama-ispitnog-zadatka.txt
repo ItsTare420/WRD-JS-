@@ -1,0 +1,66 @@
+WRD — ISPIT 15.07.2026 — VERZIJA ZA VJEŽBU
+===========================================
+
+Ovaj ZIP sadrži objavljeni tekst ispitnih zadataka i starter projekat.
+DOCX, PDF, HTML, priloženi screenshotovi i programski zahtjevi nisu mijenjani.
+
+Radi lakše buduće pripreme, u starter projekat su NAKNADNO dodane sljeće dvije
+stavke (koje NISU bile dio starter projekta korištenog na ispitu 15.07.2026)
+
+1. U "scripts/script.js" dodat je potpuno zakomentarisan primjer regex 
+   validacijske funkcije "provjeriBrojTelefona". Primjer pokazuje regex, metodu ".test()", bojenje polja i vraćanje poruke. Primjer ne rješava tražene validacije pasoša i emaila; potrebno ga je razumjeti i prilagoditi zahtjevima zadatka.
+
+2. Na kraj "styles/style.css" dodat je prazan okvir:
+
+   @media (max-width: 700px) {
+     /* TODO: mobilni prikaz */
+   }
+
+   Blok ne sadrži CSS rješenje. Student ga treba popuniti prema tekstu zadatka
+   i priloženim mobilnim screenshotovima.
+
+
+Isječak email poruke poslate predstavnicima studenata:
+--
+Poštovana kolegice,
+
+kako se pitanja dijelom preklapaju i od druge kolegice, odgovaramo objedinjeno: o tome šta je na julskom roku ostalo isto, šta je promijenjeno, te koju mjeru poduzimamo - tako da možete proslijediti poruke.
+
+1. Podaci i server bili su identični onome što ste već imali:
+Ponude se preuzimaju s endpointa https://wrd-api.fit.ba/Ispit20250712/GetNovePonude  — to je isti API korišten i u ranijem ispitnom materijalu koji ste imali na raspolaganju. Pošto je endpoint isti, i odgovor servera je strukturno identičan: isti su svi objekti i nizovi koje čitate i ispisujete — drzava, opisPonude, boravakGradovi (nazivGrada, brojNocenja), naredniPolazak (datumPol, cijenaPoOsobiEur, countSlobodnoMjesta), planiranaPutovanja (idPutovanje, datumPol, datumPov, countSlobodnoMjesta, cijenaPoOsobiEur). Nijedno polje nije preimenovano niti uklonjeno. 
+Isto vrijedi za slanje: POST ide na .../Ispit20250712/Dodaj, a objekat ima identičnu shemu kao ranije (putovanjeID, destinacijaNaziv, datumPolazak, cijenaTotal, imenaGostiju, brojPasos, emailAdress). Dakle, i sloj podataka i „ugovor" prema serveru bili su nepromijenjeni: Isti podaci se ispisuju na ekran i isti podaci se šalju na server.
+
+2. Promijenjena je forma, ne koncept:
+Promijenjeni su nazivi funkcija, raspored postavke i pojedina pravila (npr. format identifikacionog dokumenta, podjela putnika na odrasle i djecu). To je namjerno: ispit ne provjerava da li ste zapamtili tačan kod, nego da li koncept razumijete dovoljno da ga primijenite i kada se postavka izmijeni. Isti podaci, ista logika, drugačija ambalaža.
+
+3. Praktičan savjet — koristite debugger:
+Uočili smo čudne situacije npr. student je napisao gotovo cijeli kod prema šablonu rješenja s ranijeg roka, ali nije mogao pronaći grešku u nazivu jedne varijable. Na Programiranju 1 i 2 navikli ste da bug u C++ tražite breakpointom i korak-po-korak izvršavanjem — isti alat imate i ovdje. U browseru (DevTools → Sources/Console) postavite breakpoint, zaustavite izvršavanje i pogledajte tačan sadržaj objekta koji API vraća; tada imena polja vidite direktno na ekranu i ne morate ih pamtiti. Jedan console.log(globalPodaci) ili breakpoint u k1_preuzmi odmah pokaže cijelu strukturu. Primijetili smo da veći broj studenata na julskom roku nije koristio ove opcije, a upravo one najbrže rješavaju runtime greške i neočekivane rezultate.
+
+4. Šta je bilo dostupno tokom ispita:
+Tokom ispita — kao i tokom cijelog semestra, te od kuće preko https://bit.ly/wrd-fit, što je pokazano na vježbama — na FTP-u su vam bili dostupni: JS i jQ sintaksni potsjetnik.docx, knjiga „Osnove WRD" u PDF-u, skripta s vježbi u PDF-u, HTML cheat sheet i Live Server plugin. U JS i jQ sintaksni potsjetnik.docx nalaze se kompletna pravila regularnih izraza (metaznakovi, kvantifikatori, modifikatori, RegExp objekat) i primjer upotrebe .test() metode. Cilj nije da pravila znate napamet, nego da prepoznate koji obrazac primijeniti i prilagodite ga konkretnom zahtjevu.
+
+5. O primjedbi na regex validaciju — u dijelu ste u pravu.
+Na ranijim ispitnim rokovima starter projekat je sadržavao zakomentarisan primjer validacije (provjeriBrojTelefona) koji se mogao prilagoditi zahtjevu zadatka. U julskom starteru taj primjer nije bio uključen, a tokom ispita je postavljen na FTP nakon što ga je jedna kolegica zatražila — dakle nije bio unaprijed objavljen svima. S obzirom na prethodne rokove i upute s priprema, takvo očekivanje bilo je razumno i tu nedosljednost prihvatamo kao našu. Napominjemo i da nijedan student koji je tokom ispita tražio pojašnjenje ili primjer nije odbijen.
+
+6. Konkretna mjera pri bodovanju.
+Pri bodovanju validacije na julskom roku primjenjujemo sljedeće:
+
+tačno napisan regex izraz bilo gdje u kodu (čak u js komentaru) — priznaje se u punom iznosu, bez zahtjeva da validacija bude uklopljena u bojenje polja, u blokadu slanja rezervacije ili u ispis poruke o grešci;
+
+U slučaju da regex validacija izaziva runtime grešku, taj dio koda će biti ignorisan (tj. uklonjen kako bi testiranje slanja podataka moglo nastaviti) radi bodovanja zadatka post (slanje podataka na server).
+
+7. Naša preporuka za buduće ispitne rokove: primjedbe iznesite tokom ispita.
+Dežurno osoblje je prisutno upravo zato da se ovakve situacije riješe odmah i za sve, što se — kada je pitanje postavljeno — i dogodilo u roku od nekoliko minuta. Nekoliko dana nakon ispita ista primjedba se više ne može sanirati na isti način, nego samo naknadnom korekcijom kao što je gore navedena.
+
+8. Septembarski rokovi.
+Naredni ispitni rokovi će sadržavati primjer regexa.
+
+9. O objavi kompletnog ispita.
+Umjesto objave cijelog ispitnog paketa organizovat ćemo email uvid u rad, gdje ćete vidjeti svoj rad, bodovanje i konkretne greške uz objašnjenje rješenja. Razlog navodimo otvoreno: objavljeni ispiti su dosad vodili tome da se priprema svodi na uvježbavanje zadnjeg roka napamet, što studentima najviše šteti čim se postavka izmijeni. Cilj nam je razumijevanje koncepta, a ne memorisan zadatak.
+
+10. Rezultate ispita i email uvid u radove očekujte narede sedmice.
+
+Za sve sporne koncepte i tehnike debugiranja stojimo na raspolaganju na konsultacijama ili putem e-maila.
+
+Srdačan pozdrav,
+Elmir Babović, Adil Joldić, Azra Smajić 

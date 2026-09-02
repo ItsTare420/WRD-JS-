@@ -1,0 +1,257 @@
+<!doctype html>
+
+<html lang="bs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Moderna travel stranica za pregled destinacija i rezervaciju putovanja." name="description"/>
+<title>Travel — Putovanja bez komplikacija</title>
+<link href="styles/style.css?v=20260715-6" rel="stylesheet"/>
+<link href="styles/booking.css?v=20260715-3" rel="stylesheet"/>
+</head>
+<body>
+<header class="site-header">
+<div class="container navbar">
+<a aria-label="Travel početna stranica" class="brand" href="#pocetna">
+<span class="brand-mark">T</span>
+<span>TRAVEL</span>
+</a>
+<nav aria-label="Glavna navigacija" class="menu">
+<a class="active" href="#pocetna">Početna</a>
+<a href="#ponude">Destinacije</a>
+<a href="#rezervacija">Rezervacija</a>
+</nav>
+<a class="nav-cta" href="#ponude">Istraži ponude</a>
+</div>
+</header>
+<main>
+<section class="hero-section" id="pocetna">
+<div class="container hero-grid">
+<div class="hero-copy">
+<div class="eyebrow">Putuj pametnije, doživi više</div>
+<h1>
+              Tvoje sljedeće
+              <span>putovanje</span>
+              počinje ovdje.
+            </h1>
+<p class="hero-description">
+              Pronađi zanimljive destinacije, uporedi termine i rezerviši svoje
+              mjesto kroz nekoliko jednostavnih koraka.
+            </p>
+<div class="hero-actions">
+<a class="primary-button" href="#ponude">Pogledaj destinacije</a>
+</div>
+<div aria-label="Prednosti" class="hero-highlights">
+<div>
+<strong>20+</strong>
+<span>destinacija</span>
+</div>
+<div>
+<strong>4.9</strong>
+<span>ocjena putnika</span>
+</div>
+<div>
+<strong>24/7</strong>
+<span>podrška</span>
+</div>
+</div>
+</div>
+<div class="hero-visual">
+<div aria-label="Tropska destinacija" class="hero-photo" role="img">
+<div class="photo-badge">
+<span>Najtraženije</span>
+<strong>Mediteran</strong>
+</div>
+</div>
+<div class="floating-card floating-card-top">
+<span class="floating-icon">✈</span>
+<div>
+<small>Sljedeći polazak</small>
+<strong>28. septembar</strong>
+</div>
+</div>
+<div class="floating-card floating-card-bottom">
+<span class="avatars">● ● ●</span>
+<div>
+<strong>1.200+ putnika</strong>
+<small>putovalo s nama</small>
+</div>
+</div>
+</div>
+</div>
+<div class="container search-panel advanced-filter-panel">
+<div class="search-intro">
+<span>⌕</span>
+<div>
+<strong>Filtriraj ponude</strong>
+<small>Pretraži sadržaj i odredi minimalan broj noćenja</small>
+</div>
+</div>
+<label class="search-field" for="pretraga-pojam">
+<span>Država, grad ili opis</span>
+<input id="pretraga-pojam" oninput="primijeniFiltere()" placeholder="npr. Italija, Rim ili plaže" type="text"/>
+</label>
+<label class="search-field compact-field" for="filterNocenja">
+<span>Minimalan ukupan broj noćenja</span>
+<select id="filterNocenja" onchange="primijeniFiltere()">
+<option value="0">Nije važno</option>
+<option value="3">3 ili više</option>
+<option value="5">5 ili više</option>
+<option value="7">7 ili više</option>
+<option value="10">10 ili više</option>
+</select>
+</label>
+</div>
+</section>
+<section class="offers-section" id="ponude">
+<div class="container">
+<div class="section-heading offers-heading">
+<div>
+<span class="section-label">AKTUELNE PONUDE</span>
+<h2>Izaberi destinaciju koja ti odgovara.</h2>
+</div>
+<p>
+              Klikni na ponudu kako bi se dostupni termini prikazali u dijelu za
+              rezervaciju.
+            </p>
+</div>
+<div class="offers-content">
+<div class="offers-toolbar">
+<span>Rezultati pretrage</span>
+<strong id="rezultatiBroj">—</strong>
+</div>
+<div id="poruke"></div>
+<div class="destinacije" id="destinacije"></div>
+</div>
+</div>
+</section>
+<section class="reservation-section" id="rezervacija">
+<div class="container">
+<div class="section-heading reservation-heading">
+<div>
+<span class="section-label">REZERVACIJA</span>
+<h2>Spreman/na za polazak?</h2>
+</div>
+<p>
+              Odaberi termin iz tabele, zatim popuni podatke s desne strane.
+            </p>
+</div>
+<div class="reservation-box">
+<div class="table-box">
+<div class="box-heading">
+<div>
+<span>Dostupni termini</span>
+<h3>Planirana putovanja</h3>
+</div>
+<div class="table-status">Ažurirano danas</div>
+</div>
+<p class="table-info">
+                Nakon što klikneš na ponudu, ovdje će se prikazati dostupni datumi
+                putovanja.
+              </p>
+<div class="table-scroll">
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Datum polaska</th>
+<th>Datum povratka</th>
+<th>Trajanje</th>
+<th>Slobodna mjesta</th>
+<th>Cijena</th>
+<th>Odaberi</th>
+</tr>
+</thead>
+<tbody id="putovanjaTabela">
+<tr>
+<td colspan="7">Još nije odabrana destinacija.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="form-box">
+<div class="form-title">
+<span>Korak 2</span>
+<h3>Podaci za rezervaciju</h3>
+<p>Odaberi termin u tabeli, zatim unesi broj odraslih i djece.</p>
+</div>
+<div class="form-grid passenger-count-grid">
+<div class="form-group">
+<label for="brojOdraslih">Broj odraslih</label>
+<input id="brojOdraslih" max="5" min="1" oninput="k4_promjenaPutnika()" placeholder="Najmanje 1" step="1" type="number"/>
+</div>
+<div class="form-group">
+<label for="brojDjece">Broj djece</label>
+<input id="brojDjece" max="4" min="0" oninput="k4_promjenaPutnika()" step="1" type="number" value="0"/>
+</div>
+<div class="form-group">
+<label for="ukupnoPutnika">Ukupno putnika</label>
+<input id="ukupnoPutnika" placeholder="Dozvoljeno od 2 do 5" readonly="" type="text"/>
+</div>
+<div class="form-group">
+<label for="ukupnaCijena">Ukupna cijena</label>
+<input id="ukupnaCijena" placeholder="0,00 €" readonly="" type="text"/>
+</div>
+</div>
+<div class="guests-box">
+<div class="guests-heading">
+<div>
+<span>Putnici</span>
+<h4>Imena odraslih i djece</h4>
+</div>
+<span class="mini-icon">👥</span>
+</div>
+<p>
+    Nakon ispravnog unosa broja putnika automatski se generišu polja za njihova
+    imena i prezimena.
+  </p>
+<div class="gosti" id="gosti">
+<div class="guest-info">Unesi broj odraslih i djece.</div>
+</div>
+</div>
+<div class="status-box" id="statusRezervacije">
+  Prvo odaberi putovanje, zatim unesi odrasle i djecu.
+</div>
+<div class="form-grid contact-grid">
+<div class="form-group full-width">
+<label for="brojPasosa">Identifikacioni dokument</label>
+<input id="brojPasosa" oninput="provjeriPasos()" placeholder="Primjer: BIH-123456-A" type="text"/>
+</div>
+<div class="form-group full-width">
+<label for="email">Email adresa</label>
+<input id="email" oninput="provjeriEmail()" placeholder="Primjer: ime.prezime12@travel.ba" type="text"/>
+</div>
+<div class="form-group full-width">
+<label for="phone">Telefon</label>
+<input id="phone" placeholder="Primjer: +387 61 123 456" type="text"/>
+</div>
+</div>
+<button class="submit-button" onclick="k5_posalji()" type="button">
+  Pošalji rezervaciju
+  <span>→</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="site-footer">
+<div class="container footer-content">
+<div>
+<a class="brand footer-brand" href="#pocetna">
+<span class="brand-mark">T</span>
+<span>TRAVEL</span>
+</a>
+<p>Jednostavna putovanja, lijepe uspomene.</p>
+</div>
+<div class="footer-links">
+<a href="#ponude">Destinacije</a>
+<a href="#rezervacija">Rezervacija</a>
+</div>
+<span class="copyright">© 2026 Travel</span>
+</div>
+</footer>
+<script src="scripts/script.js?v=20260715"></script>
+</body>
+</html>
