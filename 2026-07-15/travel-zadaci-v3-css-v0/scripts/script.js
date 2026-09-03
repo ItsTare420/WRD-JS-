@@ -1,5 +1,5 @@
 /* -------------------------------------------------------------------------- */
-/* API putanje i globalne varijable                                           */
+/* API putanje su pripremljene                                                 */
 /* -------------------------------------------------------------------------- */
 
 const API_PONUDE = "https://wrd-api.fit.ba/Ispit20250712/GetNovePonude";
@@ -8,11 +8,11 @@ const API_REZERVACIJE = "https://wrd-api.fit.ba/Ispit20250712/Dodaj";
 let globalPodaci = [];
 let odabranoPutovanje = null;
 
-let ErrorBackgroundColor = "#FE7D7D";
-let OkBackgroundColor = "#DFF6D8";
+const ErrorBackgroundColor = "#FE7D7D";
+const OkBackgroundColor = "#DFF6D8";
 
 /* -------------------------------------------------------------------------- */
-/* Pripremljene poruke                                                        */
+/* Pripremljene poruke                                                         */
 /* -------------------------------------------------------------------------- */
 
 function prikaziPoruku(tip, naslov, tekst, trajanje = 5500) {
@@ -26,7 +26,7 @@ function prikaziPoruku(tip, naslov, tekst, trajanje = 5500) {
     document.body.appendChild(container);
   }
 
-  let poruka = document.createElement("div");
+  const poruka = document.createElement("div");
   poruka.className = `app-message app-message-${tip}`;
   poruka.innerHTML = `
     <div>
@@ -68,7 +68,7 @@ function postaviApiPoruku(html) {
 /* -------------------------------------------------------------------------- */
 
 async function k1_preuzmi() {
-  let destinacije = document.getElementById("destinacije");
+  const destinacije = document.getElementById("destinacije");
   if (!destinacije) return;
 
   globalPodaci = [];
@@ -86,10 +86,10 @@ async function k1_preuzmi() {
   `;
 
   try {
-    let odgovor = await fetch(API_PONUDE, { cache: "no-store" });
+    const odgovor = await fetch(API_PONUDE, { cache: "no-store" });
     if (!odgovor.ok) throw new Error(`API status ${odgovor.status}`);
 
-    let body = await odgovor.json();
+    const body = await odgovor.json();
     globalPodaci = Array.isArray(body.podaci) ? body.podaci : [];
 
     if (globalPodaci.length === 0) {
@@ -119,13 +119,15 @@ async function k1_preuzmi() {
         <button type="button" onclick="k1_preuzmi()">Pokušaj ponovo</button>
       </div>
     `;
-    postaviApiPoruku('<div class="api-status api-status-error">API trenutno nije dostupan.</div>');
+    postaviApiPoruku(
+      '<div class="api-status api-status-error">API trenutno nije dostupan.</div>',
+    );
     messageDanger("Greška pri učitavanju ponuda sa API-ja.");
   }
 }
 
 function prikaziDestinacije(podaci) {
-  let destinacije = document.getElementById("destinacije");
+  const destinacije = document.getElementById("destinacije");
   if (!destinacije) return;
 
   if (!Array.isArray(podaci) || podaci.length === 0) {
@@ -138,126 +140,127 @@ function prikaziDestinacije(podaci) {
     return;
   }
 
-  let htmlIspis = "";
+  destinacije.innerHTML = podaci
+    .map(function (ponuda) {
+      const originalIndex = globalPodaci.indexOf(ponuda);
+      const naredniPolazak = ponuda.naredniPolazak || {};
+      const gradovi = Array.isArray(ponuda.boravakGradovi)
+        ? ponuda.boravakGradovi
+        : [];
 
-  for (let i = 0; i < podaci.length; i++) {
-    let ponuda = podaci[i];
-    let originalIndex = globalPodaci.indexOf(ponuda);
-    let naredniPolazak = ponuda.naredniPolazak || {};
-    let gradovi = Array.isArray(ponuda.boravakGradovi) ? ponuda.boravakGradovi : [];
+      let ukupnoNocenja = 0;
+      let gradoviHtml = "";
 
-    let ukupnoNocenja = 0;
-    let gradoviHtml = "";
+      for (let i = 0; i < gradovi.length; i++) {
+        ukupnoNocenja += Number(gradovi[i].brojNocenja);
+        gradoviHtml += `
+          <span class="city-chip">
+            ${gradovi[i].nazivGrada} · ${gradovi[i].brojNocenja} noći
+          </span>
+        `;
+      }
 
-    for (let j = 0; j < gradovi.length; j++) {
-      ukupnoNocenja += Number(gradovi[j].brojNocenja);
-      gradoviHtml += `
-        <span class="city-chip">
-          ${gradovi[j].nazivGrada} · ${gradovi[j].brojNocenja} noći
-        </span>
+      const akcijaHtml = ponuda.akcijaPoruka
+        ? `<span class="offer-sale">${ponuda.akcijaPoruka}</span>`
+        : "";
+
+      return `
+        <article class="destination-card" data-destination-index="${originalIndex}">
+          <div class="destination-image-wrap">
+            <img
+              src="${ponuda.slikaUrl}"
+              alt="${ponuda.drzava}"
+              loading="lazy"
+              onerror="this.closest('.destination-image-wrap').classList.add('image-error'); this.remove();"
+            />
+            ${akcijaHtml}
+          </div>
+
+          <div class="destination-content">
+            <div class="destination-title-row">
+              <div>
+                <span class="destination-kicker">Ponuda #${ponuda.id}</span>
+                <h3>${ponuda.drzava}</h3>
+              </div>
+              <span class="destination-arrow">↗</span>
+            </div>
+
+            <p class="destination-description">${ponuda.opisPonude}</p>
+            <div class="offer-cities">${gradoviHtml}</div>
+
+            <div class="offer-info-grid four-items">
+              <div>
+                <span>Polazak</span>
+                <strong>${naredniPolazak.datumPol || "Nije objavljeno"}</strong>
+              </div>
+              <div>
+                <span>Slobodna mjesta</span>
+                <strong>${naredniPolazak.countSlobodnoMjesta ?? 0}</strong>
+              </div>
+              <div>
+                <span>Ukupno noćenja</span>
+                <strong>${ukupnoNocenja}</strong>
+              </div>
+              <div>
+                <span>Cijena po osobi</span>
+                <strong>${Number(naredniPolazak.cijenaPoOsobiEur).toFixed(2)} €</strong>
+              </div>
+            </div>
+
+            <button
+              class="choose-offer-button"
+              type="button"
+              onclick="k2_odaberiDestinaciju(${originalIndex})"
+            >
+              Prikaži termine
+              <span>→</span>
+            </button>
+          </div>
+        </article>
       `;
-    }
-
-    let akcijaHtml = ponuda.akcijaPoruka ? `<span class="offer-sale">${ponuda.akcijaPoruka}</span>` : "";
-    let cijenaFix = Number(naredniPolazak.cijenaPoOsobiEur).toFixed(2);
-
-    htmlIspis += `
-      <article class="destination-card" data-destination-index="${originalIndex}">
-        <div class="destination-image-wrap">
-          <img
-            src="${ponuda.slikaUrl}"
-            alt="${ponuda.drzava}"
-            loading="lazy"
-            onerror="this.closest('.destination-image-wrap').classList.add('image-error'); this.remove();"
-          />
-          ${akcijaHtml}
-        </div>
-
-        <div class="destination-content">
-          <div class="destination-title-row">
-            <div>
-              <span class="destination-kicker">Ponuda #${ponuda.id}</span>
-              <h3>${ponuda.drzava}</h3>
-            </div>
-            <span class="destination-arrow">↗</span>
-          </div>
-
-          <p class="destination-description">${ponuda.opisPonude}</p>
-          <div class="offer-cities">${gradoviHtml}</div>
-
-          <div class="offer-info-grid four-items">
-            <div>
-              <span>Polazak</span>
-              <strong>${naredniPolazak.datumPol || "Nije objavljeno"}</strong>
-            </div>
-            <div>
-              <span>Slobodna mjesta</span>
-              <strong>${naredniPolazak.countSlobodnoMjesta ?? 0}</strong>
-            </div>
-            <div>
-              <span>Ukupno noćenja</span>
-              <strong>${ukupnoNocenja}</strong>
-            </div>
-            <div>
-              <span>Cijena po osobi</span>
-              <strong>${cijenaFix} €</strong>
-            </div>
-          </div>
-
-          <button
-            class="choose-offer-button"
-            type="button"
-            onclick="k2_odaberiDestinaciju(${originalIndex})"
-          >
-            Prikaži termine
-            <span>→</span>
-          </button>
-        </div>
-      </article>
-    `;
-  }
-
-  destinacije.innerHTML = htmlIspis;
+    })
+    .join("");
 }
 
-
+/* -------------------------------------------------------------------------- */
+/* Z1 — filtriranje ponuda                                                     */
+/* -------------------------------------------------------------------------- */
 
 function primijeniFiltere() {
   let trazeniPojam = document.getElementById("pretraga-pojam").value.toLowerCase();
-  let minNocenja = parseInt(document.getElementById("filterNocenja").value) || 0;
+  let minNocenja = parseInt(document.getElementById("filterNocenja").value);
 
-  let filtriraniPodaci = globalPodaci.filter(ponuda => {
-    let sumNocenja = 0;
+  var filtriraniPodaci = globalPodaci.filter(ponuda=>{
+    let sumNocenja=0;
     let matchTekst = false;
 
-    for (let i = 0; i < ponuda.boravakGradovi.length; i++) {
-      sumNocenja += ponuda.boravakGradovi[i].brojNocenja;
-      if (ponuda.boravakGradovi[i].nazivGrada.toLowerCase().includes(trazeniPojam)) {
-        matchTekst = true;
-      }
+    for(let i = 0;i<ponuda.boravakGradovi.length;i++){
+      sumNocenja+=ponuda.boravakGradovi[i].brojNocenja;
+      if(ponuda.boravakGradovi[i].nazivGrada.toLowerCase().includes(trazeniPojam))
+        matchTekst=true;
     }
-
-    if (ponuda.drzava.toLowerCase().includes(trazeniPojam)) matchTekst = true;
-    if (ponuda.opisPonude.toLowerCase().includes(trazeniPojam)) matchTekst = true;
-
-    if (trazeniPojam === "") matchTekst = true;
-
-    return matchTekst && sumNocenja >= minNocenja;
+    if(ponuda.drzava.toLowerCase().includes(trazeniPojam))matchTekst=true;
+    if(ponuda.opisPonude.toLowerCase().incniPojludes(trazeam))matchTekst=true;
+    if(trazeniPojam==="") matchTekst=true;
+    return matchTekst && sumNocenja>=minNocenja;
   });
-
   prikaziDestinacije(filtriraniPodaci);
   azurirajBrojRezultata(filtriraniPodaci.length);
 }
 
 function azurirajBrojRezultata(broj) {
-  let text = broj === 1 ? "1 ponuda" : broj + " ponuda";
-  document.getElementById("rezultatiBroj").innerHTML = text;
+    let text = broj + " ponuda";
+    document.getElementById("rezultatiBroj").innerHTML=text;
+
 }
 
+/* -------------------------------------------------------------------------- */
+/* Pripremljeno: osnovni prikaz termina                                        */
+/* -------------------------------------------------------------------------- */
 
 function k2_odaberiDestinaciju(indexPonude) {
-  let ponuda = globalPodaci[indexPonude];
-  let tabela = document.getElementById("putovanjaTabela");
+  const ponuda = globalPodaci[indexPonude];
+  const tabela = document.getElementById("putovanjaTabela");
 
   if (!ponuda || !tabela) {
     messageDanger("Odabrana ponuda nije pronađena.");
@@ -266,13 +269,12 @@ function k2_odaberiDestinaciju(indexPonude) {
 
   odabranoPutovanje = null;
 
-  let kartice = document.querySelectorAll(".destination-card");
-  for (let i = 0; i < kartice.length; i++) {
-    kartice[i].classList.remove("selected-card");
-  }
-  
-  let odabranaKartica = document.querySelector(`[data-destination-index="${indexPonude}"]`);
-  if (odabranaKartica) odabranaKartica.classList.add("selected-card");
+  document.querySelectorAll(".destination-card").forEach(function (kartica) {
+    kartica.classList.remove("selected-card");
+  });
+  document
+    .querySelector(`[data-destination-index="${indexPonude}"]`)
+    ?.classList.add("selected-card");
 
   document.getElementById("brojOdraslih").value = "";
   document.getElementById("brojDjece").value = "0";
@@ -281,212 +283,228 @@ function k2_odaberiDestinaciju(indexPonude) {
   document.getElementById("gosti").innerHTML =
     '<div class="guest-info">Odaberi termin, zatim unesi broj odraslih i djece.</div>';
 
-  let putovanja = Array.isArray(ponuda.planiranaPutovanja) ? ponuda.planiranaPutovanja : [];
+  const putovanja = Array.isArray(ponuda.planiranaPutovanja)
+    ? ponuda.planiranaPutovanja
+    : [];
 
   if (putovanja.length === 0) {
-    tabela.innerHTML = '<tr><td colspan="7">Za ovu destinaciju nema planiranih putovanja.</td></tr>';
+    tabela.innerHTML =
+      '<tr><td colspan="7">Za ovu destinaciju nema planiranih putovanja.</td></tr>';
     return;
   }
 
-  let htmlRedovi = "";
-
-  for (let i = 0; i < putovanja.length; i++) {
-    let putovanje = putovanja[i];
-    let slobodnaMjesta = Number(putovanje.countSlobodnoMjesta);
-    let popunjeno = slobodnaMjesta <= 0;
-
-    let trajanje = "—";
-    if (putovanje.datumPol && putovanje.datumPov) {
-      let pPol = putovanje.datumPol.split('.');
-      let pPov = putovanje.datumPov.split('.');
+  tabela.innerHTML = putovanja
+    .map(function (putovanje, indexPutovanja) {
+      const slobodnaMjesta = Number(putovanje.countSlobodnoMjesta);
+      const popunjeno = slobodnaMjesta <= 0;
       
-      if (pPol.length === 3 && pPov.length === 3) {
-        let dPol = new Date(pPol[2], pPol[1] - 1, pPol[0]);
-        let dPov = new Date(pPov[2], pPov[1] - 1, pPov[0]);
-        let diffDana = Math.round((dPov - dPol) / (1000 * 60 * 60 * 24));
-        if (diffDana > 0) trajanje = diffDana + " dana";
-      }
-    }
+      let pol = putovanje.datumPol.split('.');
+      let pov = putovanje.datumPov.split('.');
+      let datumPolaska = new Date(pol[2],pol[1]-1,pol[0]);
+      let datumPovratka = new Date(pov[2],pov[1]-1,pov[0]);
+      let brojDana = Math.round((datumPovratka-datumPolaska)/(1000*60*60*24));
+      let trajanje = brojDana+ " dana";
 
-    let cijenaFormat = Number(putovanje.cijenaPoOsobiEur).toFixed(2);
-    let disabledAttr = popunjeno ? "disabled" : "";
-    let btnText = popunjeno ? "Popunjeno" : "Odaberi";
-    let soldOutClass = popunjeno ? "sold-out" : "";
 
-    htmlRedovi += `
-      <tr id="putovanje-red-${i}">
-        <td><strong>#${putovanje.idPutovanje}</strong></td>
-        <td>${putovanje.datumPol}</td>
-        <td>${putovanje.datumPov}</td>
-        <td>${trajanje}</td>
-        <td>
-          <span class="seats-badge ${soldOutClass}">${slobodnaMjesta}</span>
-        </td>
-        <td><strong>${cijenaFormat} €</strong></td>
-        <td>
-          <button type="button" ${disabledAttr} onclick="k3_odaberiPutovanje(${indexPonude}, ${i})">${btnText}</button>
-        </td>
-      </tr>
-    `;
-  }
+      return `
+        <tr id="putovanje-red-${indexPutovanja}">
+          <td><strong>#${putovanje.idPutovanje}</strong></td>
+          <td>${putovanje.datumPol}</td>
+          <td>${putovanje.datumPov}</td>
+          <td>${trajanje}</td>
+          <td>
+            <span class="seats-badge ${popunjeno ? "sold-out" : ""}">
+              ${slobodnaMjesta}
+            </span>
+          </td>
+          <td><strong>${Number(putovanje.cijenaPoOsobiEur).toFixed(2)} €</strong></td>
+          <td>
+            <button
+              type="button"
+              ${popunjeno ? "disabled" : ""}
+              onclick="k3_odaberiPutovanje(${indexPonude}, ${indexPutovanja})"
+            >${popunjeno ? "Popunjeno" : "Odaberi"}</button>
+          </td>
+        </tr>
+      `;
+    })
+    .join("");
 
-  tabela.innerHTML = htmlRedovi;
+
 }
+
+/* -------------------------------------------------------------------------- */
+/* Z2 — trajanje i odabir termina                                              */
+/* -------------------------------------------------------------------------- */
+
+
 
 function k3_odaberiPutovanje(indexPonude, indexPutovanja) {
   odabranoPutovanje = globalPodaci[indexPonude].planiranaPutovanja[indexPutovanja];
-
-  let sviRedovi = document.querySelectorAll("#putovanjaTabela tr");
-  for (let i = 0; i < sviRedovi.length; i++) {
-    sviRedovi[i].style.backgroundColor = "";
+  let sviRedovi =document.querySelectorAll("#putovanjaTabela tr");
+  for(let i =0;i<sviRedovi.length;i++){
+    sviRedovi[i].style.backgroundColor="";
   }
+  let kliknutiRed = document.getElementById("putovanje-red-" + indexPutovanja);
+  kliknutiRed.style.backgroundColor=OkBackgroundColor;  
 
-  document.getElementById("putovanje-red-" + indexPutovanja).style.backgroundColor = OkBackgroundColor;
 
-  k4_promjenaPutnika();
 }
 
-
-function provjeriBrojPutnika() {
-  if (!odabranoPutovanje) return "Odaberi termin iz tabele.<br>";
-
-  let brojOdraslih = parseInt(document.getElementById("brojOdraslih").value);
-  let brojDjece = parseInt(document.getElementById("brojDjece").value);
-
-  if (isNaN(brojOdraslih) || brojOdraslih < 1) return "Mora postojati barem 1 odrasla osoba.<br>";
-  if (isNaN(brojDjece) || brojDjece < 0) return "Broj djece ne može biti negativan.<br>";
-
-  let ukupno = brojOdraslih + brojDjece;
-  if (ukupno < 2 || ukupno > 5) return "Ukupan broj putnika mora biti od 2 do 5.<br>";
-  if (ukupno > odabranoPutovanje.countSlobodnoMjesta) return "Nema dovoljno slobodnih mjesta.<br>";
-
-  return "";
-}
+/* -------------------------------------------------------------------------- */
+/* Z3 — odrasli, djeca, dinamička polja i cijena                              */
+/* -------------------------------------------------------------------------- */
 
 function k4_promjenaPutnika() {
   let greska = provjeriBrojPutnika();
-  let gostiDiv = document.getElementById("gosti");
-
-  if (greska !== "") {
-    document.getElementById("ukupnoPutnika").value = "";
-    document.getElementById("ukupnaCijena").value = "";
-    gostiDiv.innerHTML = `<div style="color:red; font-weight:bold;">${greska}</div>`;
+  if(greska!==""){
+    document.getElementById("ukupnoPutnika").value="";
+    document.getElementById("ukupnaCijena").value="";
+    gosti.innerHTML="";
     return;
   }
-
-  let brojOdraslih = parseInt(document.getElementById("brojOdraslih").value);
-  let brojDjece = parseInt(document.getElementById("brojDjece").value);
-  
-  document.getElementById("ukupnoPutnika").value = brojOdraslih + brojDjece;
-
+  let brojOdraslih=parseInt(document.getElementById("brojOdraslih").value);
+  let brojDjece =parseInt(document.getElementById("brojDjece").value);
+  document.getElementById("ukupnoPutnika").value=brojOdraslih+brojDjece;
+  //Cijena: odrasli 100%, djeca 70%
   let cijenaPoOsobi = Number(odabranoPutovanje.cijenaPoOsobiEur);
-  let ukupnaCijena = (brojOdraslih * cijenaPoOsobi) + (brojDjece * cijenaPoOsobi * 0.7);
-  document.getElementById("ukupnaCijena").value = ukupnaCijena.toFixed(2) + " €";
-
+  let ukupnaCijena = (brojOdraslih*cijenaPoOsobi)+(brojDjece*cijenaPoOsobi*0.7);
+  document.getElementById("ukupnaCijena").value = ukupnaCijena.toFixed(2)+ " €";
   let stareVrijednosti = {};
   let trenutniInputi = document.querySelectorAll(".ime-putnika");
-  for (let i = 0; i < trenutniInputi.length; i++) {
-    stareVrijednosti[trenutniInputi[i].id] = trenutniInputi[i].value;
+  for(let i =0;i<trenutniInputi.length;i++){
+    stareVrijednosti[trenutniInputi[i].id]=trenutniInputi[i].value;
   }
-
-  gostiDiv.innerHTML = "";
-
-  for (let i = 1; i <= brojOdraslih; i++) {
-    let id = "odrasli-" + i;
+  gosti.innerHTML="";
+  for(let i =1;i<=brojOdraslih;i++){
+    let id = "odrasli-"+i;
     let vrijednost = stareVrijednosti[id] || "";
-    gostiDiv.innerHTML += `
-      <div style="background-color: #eefaf6; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #c2e5d9; display: flex; align-items: center;">
-        <div style="background:#0f2742; color:#fff; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:6px; margin-right:10px; font-weight:bold;">O</div>
-        <div style="flex-grow:1;">
-          <strong style="color: #173a5e; font-size:12px;">Odrasla osoba ${i}</strong>
-          <input type="text" id="${id}" class="ime-putnika" value="${vrijednost}" placeholder="Ime i prezime" style="width:100%; margin-top:4px; padding:8px; border:1px solid #dfe6eb; border-radius:6px;">
-        </div>
-      </div>
-    `;
+    gosti.innerHTML+=`<input type="text" placeholder = "Odrasla osoba ${i}" class="ime-putnika"
+    id="${id}" value="${vrijednost}" style="width:100%;margin-top:5px;border:1px solid ">`
   }
-
-  for (let i = 1; i <= brojDjece; i++) {
-    let id = "dijete-" + i;
+  for(let i =1;i<=brojDjece;i++){
+    let id = "dijete"+i;
     let vrijednost = stareVrijednosti[id] || "";
-    gostiDiv.innerHTML += `
-      <div style="background-color: #fff5eb; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #fce3d0; display: flex; align-items: center;">
-        <div style="background:#ff8a4c; color:#fff; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:6px; margin-right:10px; font-weight:bold;">D</div>
-        <div style="flex-grow:1;">
-          <strong style="color: #ff8a4c; font-size:12px;">Dijete ${i}</strong>
-          <input type="text" id="${id}" class="ime-putnika" value="${vrijednost}" placeholder="Ime i prezime" style="width:100%; margin-top:4px; padding:8px; border:1px solid #dfe6eb; border-radius:6px;">
-        </div>
-      </div>
-    `;
+    gosti.innerHTML+=`<input type="text" placeholder = "Dijete ${i}" class="ime-putnika"
+    id="${id}" value="${vrijednost}" style="width:100%;margin-top:5px;border:1px solid ">`
   }
+  
+
 }
 
+function provjeriBrojPutnika() {
+  let brojOdraslih=parseInt(document.getElementById("brojOdraslih").value);
+  let brojDjece =parseInt(document.getElementById("brojDjece").value);
+
+  if(isNaN(brojOdraslih)||brojOdraslih<1)return "Mora postojati barem jedna odrasla osoba!";
+  if(isNaN(brojDjece)||brojDjece < 0 )return "Broj djece ne može biti negativan.";
+  let ukupno = brojOdraslih+brojDjece;
+  if(ukupno<2||ukupno>5)return "Ukupan broj putnika mora biti od 2 do 5.";
+  if(ukupno>odabranoPutovanje.countSlobodnoMjesta)return "Nema dovoljno slobodnih mjesta.";
+  return "";
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* Z4 — frontend validacija                                                    */
+/* -------------------------------------------------------------------------- */
+
 function provjeriPasos() {
-  let pasosInput = document.getElementById("brojPasosa");
-  let regex = /^BIH-\d{6}-[A-F]$/;
-  
-  if (!regex.test(pasosInput.value)) {
-    pasosInput.style.backgroundColor = ErrorBackgroundColor;
-    return "Identifikacioni dokument mora biti u formatu BIH-123456-A<br>";
-  } else {
-    pasosInput.style.backgroundColor = OkBackgroundColor;
+  var idInput = document.getElementById("brojPasosa");
+  var idTekst = idInput.value;
+  var idRegex = /^BIH-\d{6}-[A-F]$/;
+  if(!idRegex.test(idTekst)){
+    idInput.style.backgroundColor=ErrorBackgroundColor;
+    return "Validacija ID-a nije ispravna. Format ID-a treba biti formata BIH-123456-A <br>";
+
+  }else{
+    idInput.style.backgroundColor=OkBackgroundColor;
     return "";
   }
 }
 
 function provjeriEmail() {
-  let emailInput = document.getElementById("email");
-  let regex = /^[a-z]{2,}\.[a-z]{2,}\d{0,2}@(travel\.ba|fit\.ba)$/;
-  
-  if (!regex.test(emailInput.value)) {
-    emailInput.style.backgroundColor = ErrorBackgroundColor;
-    return "Neispravna email adresa (potrebno ime.prezime12@travel.ba ili fit.ba).<br>";
-  } else {
-    emailInput.style.backgroundColor = OkBackgroundColor;
+  var emailInput = document.getElementById("email");
+  var emailTekst = emailInput.value;
+  var emailRegex = /^[a-z]{2,}\.[a-z]{2,}\d{0,2}@(travel\.ba|fit\.ba)$/;
+  if(!emailRegex.test(emailTekst)){
+    emailInput.style.backgroundColor=ErrorBackgroundColor;
+    return "Validacija email-a nije ispravna. Format email-a treba biti ime.prezime@travel.ba ili ime.prezime12@fit.ba <br>";
+
+  }else{
+    emailInput.style.backgroundColor=OkBackgroundColor;
     return "";
   }
 }
 
+// DODANO U VERZIJI ZA VJEŽBU — ovaj primjer nije bio u starter projektu
+// korištenom na ispitu 15.07.2026. Primjer pokazuje upotrebu regexa i .test().
+//
+// function provjeriBrojTelefona() {
+//   let phone = document.getElementById("phone");
+//
+//   if (!/^\+387 6[0-9] \d{3} \d{3}$/.test(phone.value)) {
+//     phone.style.backgroundColor = ErrorBackgroundColor;
+//     return "Telefon mora biti u formatu: +387 61 123 456\n";
+//   } else {
+//     phone.style.backgroundColor = OkBackgroundColor;
+//     return "";
+//   }
+// }
 
+/* -------------------------------------------------------------------------- */
+/* Z5 — kreiranje objekta i slanje rezervacije                                */
+/* -------------------------------------------------------------------------- */
 
 function kreirajObjekatRezervacije() {
   let imenaGostijuNiz = [];
+  let tipoviPutnikaNiz = [];
   let sviInputi = document.querySelectorAll(".ime-putnika");
   
-  for (let i = 0; i < sviInputi.length; i++) {
+  for(let i = 0; i < sviInputi.length; i++){
+    imenaGostijuNiz.push(sviInputi[i].value);
     let tip = sviInputi[i].id.includes("odrasli") ? "Odrasla osoba" : "Dijete";
-    imenaGostijuNiz.push({
-      imePrezime: sviInputi[i].value,
-      tipPutnika: tip
-    });
+    tipoviPutnikaNiz.push(tip); 
   }
+  let offerNaslov = document.querySelector(".selected-card h3");
+  let nazivDestinacije = offerNaslov.innerText;
+
 
   let obj = {
-    idPutovanje: odabranoPutovanje ? odabranoPutovanje.idPutovanje : null,
-    brojPasosa: document.getElementById("brojPasosa").value,
-    email: document.getElementById("email").value,
+    putovanjeId: odabranoPutovanje.idPutovanje.toString(),
+    destinacijaNaziv:nazivDestinacije,
+    datumPolazak: odabranoPutovanje.datumPol,
+    cijenaTotal: parseInt(document.getElementById("ukupnaCijena").value),
+    imenaGostiju: imenaGostijuNiz,
+    brojPasos: document.getElementById("brojPasosa").value,
+    emailAdress:document.getElementById("email").value,
     telefon: document.getElementById("phone").value,
-    brojOdraslih: parseInt(document.getElementById("brojOdraslih").value) || 0,
-    brojDjece: parseInt(document.getElementById("brojDjece").value) || 0,
-    cijenaTotal: parseFloat(document.getElementById("ukupnaCijena").value) || 0,
-    gosti: imenaGostijuNiz
-  };
-  
+    brojOdraslih: parseInt(document.getElementById("brojOdraslih").value),
+    tipoviPutnika: tipoviPutnikaNiz
+  }
   return obj;
 }
 
 function k5_posalji() {
-  let greske = "";
-  
-  greske += provjeriBrojPutnika();
-  greske += provjeriPasos();
-  greske += provjeriEmail();
+  let frontendGreskeValidacije = "";
+  frontendGreskeValidacije+=provjeriBrojPutnika();
+  frontendGreskeValidacije+=provjeriPasos();
+  frontendGreskeValidacije+=provjeriEmail();
 
-  if (greske !== "") {
-    messageDanger("Frontend validacija:<br><br>" + greske);
+  // TODO Z5:
+  // - pozvati sve frontend validacije;
+  // - spojiti njihove poruke u frontendGreskeValidacije;
+  // - blokirati POST ako postoji barem jedna greška.
+
+  if (frontendGreskeValidacije !== "") {
+    messageDanger(
+      "Frontend validacija:<br><br>" +
+        frontendGreskeValidacije.replace(/\n/g, "<br>"),
+    );
     return;
   }
 
-  let jsObjekat = kreirajObjekatRezervacije();
+  const jsObjekat = kreirajObjekatRezervacije();
 
   fetch(API_REZERVACIJE, {
     method: "POST",
@@ -495,19 +513,28 @@ function k5_posalji() {
       "Content-Type": "application/json",
     },
   })
-    .then(res => res.json())
-    .then(body => {
+    .then(function (res) {
+      return res.json();
+    })
+    .then(function (body) {
       if (body.brojGresaka === 0) {
-        dialogSuccess("Uspješno kreirana rezervacija sa brojem: " + body.idRezervacije);
+        dialogSuccess(
+          "Uspješno kreirana rezervacija sa brojem: " + body.idRezervacije,
+        );
       } else {
-        let textGreske = Array.isArray(body.spisakGresaka) ? body.spisakGresaka.join("<br>") : "API je odbio podatke.";
-        messageDanger("Backend greške:<br>" + textGreske);
+        const backendGreskeValidacije = Array.isArray(body.spisakGresaka)
+          ? body.spisakGresaka.join("<br>")
+          : "API je odbio poslane podatke.";
+
+        messageDanger(
+          "Backend validacija: Poslati JSON podaci nisu ispravni.<br><br>" +
+            backendGreskeValidacije,
+        );
       }
     })
-    .catch(() => {
-      messageDanger("Greška pri slanju rezervacije. Provjerite internet konekciju.");
+    .catch(function () {
+      messageDanger("Greška pri slanju rezervacije.");
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", k1_preuzmi);
