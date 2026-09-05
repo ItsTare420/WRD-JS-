@@ -240,7 +240,7 @@ function primijeniFiltere() {
         matchTekst=true;
     }
     if(ponuda.drzava.toLowerCase().includes(trazeniPojam))matchTekst=true;
-    if(ponuda.opisPonude.toLowerCase().incniPojludes(trazeam))matchTekst=true;
+    if(ponuda.opisPonude.toLowerCase().includes(trazeniPojam)) matchTekst = true;
     if(trazeniPojam==="") matchTekst=true;
     return matchTekst && sumNocenja>=minNocenja;
   });
